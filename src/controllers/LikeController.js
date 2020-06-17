@@ -10,7 +10,7 @@ module.exports = {
 
         await tweet.save();
 
-        req.io.emmit('tweet', tweet);
+        req.io.emit('tweet', tweet);
 
         return res.json(tweet);
     }
