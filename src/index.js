@@ -2,6 +2,8 @@ const express = require('express');
 
 const mongoose = require('mongoose');
 
+const routes = require('./routes');
+
 const app = express();
 
 mongoose.connect('mongodb+srv://heroku:1234@cluster0-jyyah.mongodb.net/goweek-backend?retryWrites=true&w=majority', {
@@ -9,10 +11,9 @@ mongoose.connect('mongodb+srv://heroku:1234@cluster0-jyyah.mongodb.net/goweek-ba
     useUnifiedTopology: true
 })
 
-app.get('/', (req, res) => {
-    return res.send('Hello World');
-});
+app.use(express.urlencoded({extended: true}));
+app.use('/api/tweets', routes);
 
 app.listen(3000, () => {
-    console.log('Server started on pot 3000');
+    console.log('Server started on port 3000');
 });
