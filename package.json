@@ -5,8 +5,14 @@
   "repository": "https://github.com/phillrog/omniStack-5.0-backend",
   "author": "Phillipe Roger Souza <phill@hotmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
   "dependencies": {
     "express": "^4.17.1",
     "mongoose": "^5.9.19"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
