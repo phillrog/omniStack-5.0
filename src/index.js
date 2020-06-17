@@ -6,6 +6,15 @@ const routes = require('./routes');
 
 const app = express();
 
+const server = require('http').server(app);
+const io = require('socket.io')(server);
+
+app.use((req, res, next) => {
+    req.io = io;
+
+    return next();
+});
+
 mongoose.connect('mongodb+srv://heroku:1234@cluster0-jyyah.mongodb.net/goweek-backend?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true
