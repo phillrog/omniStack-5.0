@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
-  node: circleci/node@1.1.6
-  docker: circleci/docker@1.2.1
+  node: circleci/node@1.1.6 
 
 jobs:
   build:
@@ -30,3 +29,4 @@ workflows:
     build:
       jobs:
         - build
+        - deploy
