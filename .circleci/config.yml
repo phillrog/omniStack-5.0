@@ -17,9 +17,9 @@ jobs:
       - run:
               name: Creating Dummy Artifacts
               command: |
-                echo ls > /tmp/artifact-1;
+                ls > /tmp/artifact-1;
                 mkdir /tmp/artifacts;
-                echo ls > /tmp/artifacts/artifact-2;
+                ls > /tmp/artifacts/artifact-2;
   
       - store_artifacts:
             path: /tmp/artifact-1
@@ -37,9 +37,9 @@ jobs:
       - run:
             name: Creating Dummy Artifacts
             command: |
-              echo ls > /tmp/artifact-1;
+              ls > /tmp/artifact-1;
               mkdir /tmp/artifacts;
-              echo ls > /tmp/artifacts/artifact-2;
+              ls > /tmp/artifacts/artifact-2;
 
       - store_artifacts:
             path: /tmp/artifact-1
