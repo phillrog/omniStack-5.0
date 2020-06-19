@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+    nodejs:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: nodejs
+        restart: always
+        env_file: .env
+        environment:
+            - MONGO_USERNAME=$MONGO_USERNAME
+            - MONGO_PASSWORD=$MONGO_PASSWORD
+            - MONGO_HOSTNAME=$MONGO_HOSTNAME
+            - MONGO_PORT=$MONGO_PORT
+            - MONGO_DB=$MONGO_DB
+            - NODE_ENV=prod
+        ports:
+            - "3001:3001"
+        networks:
+            - app-network           
+        depends_on:
+            - mongodb
+    mongodb:
+        image: mongo:latest
+        container_name: mongodb
+        restart: unless-stopped
+        env_file: .env    
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+        volumes:  
+            - dbdata:/data/mongodb   
+        networks:
+            - app-network  
+        ports:
+            - "${MONGO_PORT}:${MONGO_PORT}"
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    dbdata:
