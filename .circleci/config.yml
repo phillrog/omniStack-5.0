@@ -37,6 +37,7 @@ jobs:
 
   deploy_heroku:
     steps:
+      - checkout
       - run:
         name: Install Docker client
         command: |
