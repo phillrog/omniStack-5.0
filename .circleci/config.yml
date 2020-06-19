@@ -4,13 +4,12 @@ jobs:
   build:
     docker:
       - image: circleci/node:latest
+        user: root
     steps:
       - checkout
       - run:
           name: Update to latest npm version
           command: "sudo npm install -g npm@latest"
-      - restore_cache: 
-          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Install dependencies
           command: npm install
