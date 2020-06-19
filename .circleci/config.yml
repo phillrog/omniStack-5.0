@@ -37,7 +37,7 @@ jobs:
       - run:
             name: Build using `docker-compose`
             command: |
-              docker-compose -f ./docker-compose.prod.yml build
+              docker-compose -f docker-compose.prod.yml build
 
       - add_ssh_keys:
                       fingerprints:
