@@ -13,7 +13,8 @@ jobs:
             command: "sudo npm install -g npm@latest"
       - run:
             name: Install dependencies
-            command: npm install            
+            command: npm install    
+      - run: bash ./setup-heroku.sh        
 
   deploy_heroku:
     docker:
@@ -50,7 +51,17 @@ jobs:
                 curl -L https://github.com/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
                 chmod +x /usr/local/bin/docker-compose    
 
-      
+      - run: bash ./setup-heroku.sh
+
+      - add_ssh_keys:
+                      fingerprints:
+                        - $HEROKU_SSH_FINGERPRINT
+      - run:
+              name: Deploy to Heroku if tests pass and branch is master
+              command: |
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  git push --force git@heroku.com:$HEROKU_APP_NAME.git HEAD:refs/heads/master                
+                fi
 workflows:
   build_and_test:
     jobs:
