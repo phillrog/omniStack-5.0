@@ -15,7 +15,7 @@ jobs:
           name: Install dependencies
           command: npm install      
 
-  deploy_heroku:
+  deployToHeroku:
     docker:
       - image: circleci/node:latest
         user: root
@@ -32,15 +32,15 @@ jobs:
           mv /tmp/docker/* /usr/bin
 
       - run:
-          name: Install Docker Compose
-          command: |
-            set -x
-            curl -L https://github.com/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-            chmod +x /usr/local/bin/docker-compose    
+        name: Install Docker Compose
+        command: |
+          set -x
+          curl -L https://github.com/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose    
 
 workflows:
   build_and_test:
     jobs:
       - build_api
-      - deploy_heroku
+      - deployToHeroku
 
