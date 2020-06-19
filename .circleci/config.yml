@@ -4,8 +4,6 @@ jobs:
   build:
     docker:
       - image: circleci/node:11-alpine
-    executor:
-      name: node/default
     steps:
       - checkout
       - run:
