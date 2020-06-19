@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  build_api:
+  build_deploy_api:
     docker:
       - image: circleci/node:latest
         user: root
@@ -15,13 +15,35 @@ jobs:
             name: Install dependencies
             command: npm install    
       - run: bash ./setup-heroku.sh        
+      
+      - run:
+            name: Install Docker client
+            command: |
+              set -x
+              VER="17.03.0-ce"
+              curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+              tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+              mv /tmp/docker/* /usr/bin
 
-  deploy_heroku:
-    docker:
-      - image: circleci/node:latest
-        user: root
-    working_directory: ~/api
-    steps:
+      - run:
+            name: Install Docker Compose
+            command: |
+              set -x
+              curl -L https://github.com/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+              chmod +x /usr/local/bin/docker-compose    
+
+      - run: bash ./setup-heroku.sh
+
+      - add_ssh_keys:
+                      fingerprints:
+                        - $HEROKU_SSH_FINGERPRINT
+      - deploy:
+              name: Deploy to Heroku if tests pass and branch is master
+              command: |
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  git push --force git@heroku.com:$HEROKU_APP_NAME.git HEAD:refs/heads/master                
+                fi
+
       - run:
             name: Creating Dummy Artifacts
             command: |
@@ -35,38 +57,8 @@ jobs:
 
       - store_artifacts:
             path: /tmp/artifacts
-      - run:
-            name: Install Docker client
-            command: |
-              set -x
-              VER="17.03.0-ce"
-              curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
-              tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-              mv /tmp/docker/* /usr/bin
-
-      - run:
-              name: Install Docker Compose
-              command: |
-                set -x
-                curl -L https://github.com/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-                chmod +x /usr/local/bin/docker-compose    
-
-      - run: bash ./setup-heroku.sh
-
-      - add_ssh_keys:
-                      fingerprints:
-                        - $HEROKU_SSH_FINGERPRINT
-      - run:
-              name: Deploy to Heroku if tests pass and branch is master
-              command: |
-                if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                  git push --force git@heroku.com:$HEROKU_APP_NAME.git HEAD:refs/heads/master                
-                fi
 workflows:
   build_and_test:
     jobs:
-      - build_api
-      - deploy_heroku:
-            requires: 
-                - build_api
+      - build_deploy_api
 
