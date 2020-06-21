@@ -17,15 +17,10 @@ app.use((req, res, next) => {
     return next();
 });
 
-// mongoose.connect('mongodb+srv://heroku:1234@cluster0-jyyah.mongodb.net/goweek-backend?retryWrites=true&w=majority', {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// })
-
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use('/api', routes);
 
 server.listen(port, () => {
-    console.log('Server started on port 3000');
+    console.log(`Server started on port ${port}`);
 });

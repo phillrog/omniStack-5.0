@@ -3,7 +3,7 @@ const Tweet = require('../models/Tweet');
 
 module.exports = {
     async index(req, res) {
-        const tweets = await Tweet.find({'author': {$ne: null}}).sort('-createdAt');
+        const tweets = await Tweet.find({"$where": "this.author.length > 0" }).sort('-createdAt');
 
         return res.json(tweets);
     },
